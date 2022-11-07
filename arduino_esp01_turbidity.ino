@@ -92,21 +92,31 @@ void loop() {
   }
   volt = volt / 800;
   volt = round_to_dp(volt, 2);
+  lcd.clear();
+  lcd.setCursor(0,0);
   if (volt < 2.5) {
     ntu = 3000;
-    blinker(green_led);
+    
+    lcd.print(ntu);
+    lcd.print(" NTU");
+    
+    digitalWrite(green_led, HIGH);
+    delay(1000);
+    digitalWrite(green_led, LOW);
     
   } else {
     ntu = -1120.4 * sq(volt) + 5742.3 * volt - 4353.8;
-    buzzerHandler();
-    blinker(red_led);
-  }
 
-    lcd.clear();
-    lcd.setCursor(0,0);
     lcd.print(ntu);
     lcd.print(" NTU");
-    delay(10);
+    
+    tone(buzzer_pin, 1000); 
+    digitalWrite(red_led, HIGH);
+    delay(1000);
+    noTone(buzzer_pin); 
+    digitalWrite(red_led, LOW);
+  }
+
   
   String veri = "GET https://api.thingspeak.com/update?api_key=";   // Thingspeak command.
   veri += api_key;
